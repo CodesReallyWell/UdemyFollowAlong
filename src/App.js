@@ -5,9 +5,9 @@ import Person from './Person/Person'
 const App = props => {
     const [personState, setPersonsState] = useState({  // only available in classes old way before hooks
         persons: [
-          { name: 'Max', age: 28},
-          { name: 'Dave', age: 52},
-          { name: 'Liam', age: 24}
+          { id: 'sdfsfd1', name: 'Max', age: 28},
+          { id: 'sdfsfd2', name: 'Dave', age: 52},
+          { id: 'sdfsfd3', name: 'Liam', age: 24}
         ],
         otherState: 'some value',
         showPersons: true
@@ -26,14 +26,21 @@ const App = props => {
         })
     }
 
-    const nameChangeHandler = (event) => {
-      setPersonsState({
-        persons: [
-          { name: 'Max', age: 28},
-          { name: event.target.value, age: 52},
-          { name: 'Liam', age: 24}
-        ]
+    const nameChangeHandler = (event, id) => {
+      const personIndex = personState.persons.findIndex(p => {
+        return p.id === id
       })
+
+      const person = {
+        ...personState.persons[personIndex] // puts objects into new object
+      }
+
+      person.name = event.target.value
+
+      const persons = [...personState.persons]
+      persons[personIndex] = person
+      setPersonsState({persons: persons,
+      showPersons: true})
     }
 
       const style = {
@@ -76,7 +83,9 @@ const App = props => {
             return <Person 
             click={() => deletePersonHandler(index)}
             name={person.name} 
-            age={person.age}/>
+            age={person.age}
+            key={person.id}
+            changed={(event) => nameChangeHandler(event, person.id)}/>
           })}
         </div>
       )
